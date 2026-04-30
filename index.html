@@ -1,0 +1,1014 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AIパーソナルトレーニング | 栄井大進</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700;900&family=Inter:wght@300;400;500;600;700;900&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #060608;
+      --bg-2: #0c0c10;
+      --gold: #C9A84C;
+      --gold-light: #E8C96A;
+      --gold-dim: rgba(201,168,76,0.12);
+      --text: #f0ede8;
+      --text-sub: #888480;
+      --border: rgba(255,255,255,0.07);
+      --card: rgba(255,255,255,0.025);
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Noto Sans JP', 'Inter', sans-serif;
+      line-height: 1.7;
+      overflow-x: hidden;
+    }
+
+    /* ── ANIMATIONS ── */
+    .reveal {
+      opacity: 0;
+      transform: translateY(36px);
+      transition: opacity 0.85s cubic-bezier(.22,1,.36,1), transform 0.85s cubic-bezier(.22,1,.36,1);
+    }
+    .reveal-left {
+      opacity: 0;
+      transform: translateX(-48px);
+      transition: opacity 0.85s cubic-bezier(.22,1,.36,1), transform 0.85s cubic-bezier(.22,1,.36,1);
+    }
+    .reveal-right {
+      opacity: 0;
+      transform: translateX(48px);
+      transition: opacity 0.85s cubic-bezier(.22,1,.36,1), transform 0.85s cubic-bezier(.22,1,.36,1);
+    }
+    .reveal.visible, .reveal-left.visible, .reveal-right.visible {
+      opacity: 1;
+      transform: translate(0);
+    }
+
+    /* ── NAV ── */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 200;
+      padding: 22px 48px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      transition: background 0.4s, border-color 0.4s;
+      border-bottom: 1px solid transparent;
+    }
+    nav.scrolled {
+      background: rgba(6,6,8,0.92);
+      backdrop-filter: blur(24px);
+      -webkit-backdrop-filter: blur(24px);
+      border-color: var(--border);
+    }
+    .nav-logo {
+      font-family: 'Inter', sans-serif;
+      font-size: 0.78rem;
+      font-weight: 700;
+      letter-spacing: 0.28em;
+      text-transform: uppercase;
+      color: var(--gold);
+    }
+    .nav-links {
+      display: flex;
+      gap: 36px;
+      list-style: none;
+    }
+    .nav-links a {
+      color: var(--text-sub);
+      text-decoration: none;
+      font-size: 0.78rem;
+      letter-spacing: 0.04em;
+      transition: color 0.2s;
+    }
+    .nav-links a:hover { color: var(--text); }
+
+    /* ── HERO ── */
+    #hero {
+      position: relative;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+    }
+
+    .hero-grid-bg {
+      position: absolute;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(201,168,76,0.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(201,168,76,0.04) 1px, transparent 1px);
+      background-size: 72px 72px;
+      animation: gridDrift 30s linear infinite;
+    }
+    @keyframes gridDrift {
+      from { background-position: 0 0; }
+      to   { background-position: 0 72px; }
+    }
+
+    .hero-radial {
+      position: absolute;
+      width: 900px; height: 900px;
+      background: radial-gradient(circle, rgba(201,168,76,0.07) 0%, transparent 65%);
+      border-radius: 50%;
+      top: 50%; left: 50%;
+      transform: translate(-50%,-50%);
+      animation: breathe 6s ease-in-out infinite;
+      pointer-events: none;
+    }
+    @keyframes breathe {
+      0%,100% { transform: translate(-50%,-50%) scale(1); opacity: 0.6; }
+      50%      { transform: translate(-50%,-50%) scale(1.15); opacity: 1; }
+    }
+
+    .hero-inner {
+      position: relative;
+      z-index: 10;
+      display: grid;
+      grid-template-columns: 1fr 420px;
+      gap: 100px;
+      align-items: center;
+      max-width: 1140px;
+      width: 100%;
+      padding: 120px 48px 80px;
+    }
+
+    .hero-eyebrow {
+      display: inline-block;
+      font-size: 0.7rem;
+      letter-spacing: 0.38em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 24px;
+      padding-bottom: 16px;
+      border-bottom: 1px solid rgba(201,168,76,0.25);
+    }
+
+    .hero-h1 {
+      font-size: clamp(2.6rem, 5.5vw, 4.2rem);
+      font-weight: 900;
+      line-height: 1.1;
+      letter-spacing: -0.025em;
+      margin-bottom: 28px;
+    }
+
+    .hero-h1 em {
+      font-style: normal;
+      background: linear-gradient(130deg, var(--gold) 0%, var(--gold-light) 60%, #fff 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .hero-sub {
+      color: var(--text-sub);
+      font-size: 1.02rem;
+      line-height: 1.95;
+      margin-bottom: 48px;
+      max-width: 480px;
+    }
+
+    .btn-primary {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      background: linear-gradient(135deg, var(--gold), var(--gold-light));
+      color: #0a0800;
+      font-weight: 700;
+      font-size: 0.85rem;
+      letter-spacing: 0.06em;
+      padding: 17px 36px;
+      border-radius: 2px;
+      text-decoration: none;
+      transition: transform 0.25s, box-shadow 0.25s;
+    }
+    .btn-primary:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 16px 48px rgba(201,168,76,0.38);
+    }
+
+    .hero-photo-col {
+      position: relative;
+    }
+    .hero-photo-border {
+      position: relative;
+      display: inline-block;
+      width: 100%;
+    }
+    .hero-photo-border::before {
+      content: '';
+      position: absolute;
+      inset: -1px;
+      background: linear-gradient(140deg, var(--gold) 0%, rgba(201,168,76,0.1) 50%, var(--gold) 100%);
+      border-radius: 3px;
+      z-index: 0;
+    }
+    .hero-photo-border::after {
+      content: '';
+      position: absolute;
+      bottom: -20px; right: -20px;
+      width: 80px; height: 80px;
+      border-right: 1px solid rgba(201,168,76,0.3);
+      border-bottom: 1px solid rgba(201,168,76,0.3);
+    }
+    .hero-photo {
+      width: 100%;
+      aspect-ratio: 3/4;
+      object-fit: cover;
+      object-position: top center;
+      display: block;
+      border-radius: 2px;
+      position: relative;
+      z-index: 1;
+      filter: contrast(1.04) brightness(0.96);
+    }
+
+    .scroll-indicator {
+      position: absolute;
+      bottom: 40px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+      color: var(--text-sub);
+      font-size: 0.65rem;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      z-index: 10;
+    }
+    .scroll-line {
+      width: 1px;
+      height: 52px;
+      background: linear-gradient(to bottom, var(--gold), transparent);
+      animation: lineAnim 2.2s ease-in-out infinite;
+      transform-origin: top;
+    }
+    @keyframes lineAnim {
+      0%   { transform: scaleY(0); opacity: 0; }
+      40%  { transform: scaleY(1); opacity: 1; transform-origin: top; }
+      41%  { transform-origin: bottom; }
+      80%  { transform: scaleY(0); opacity: 0; }
+      100% { transform: scaleY(0); opacity: 0; }
+    }
+
+    /* ── SECTION BASE ── */
+    .section-wrap {
+      padding: 130px 48px;
+      max-width: 1140px;
+      margin: 0 auto;
+    }
+    .section-wrap-full {
+      padding: 130px 48px;
+      background: var(--bg-2);
+    }
+    .section-inner {
+      max-width: 1140px;
+      margin: 0 auto;
+    }
+
+    .label {
+      display: block;
+      font-family: 'Inter', sans-serif;
+      font-size: 0.68rem;
+      font-weight: 600;
+      letter-spacing: 0.36em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 18px;
+    }
+    .section-title {
+      font-size: clamp(1.9rem, 4.2vw, 3rem);
+      font-weight: 900;
+      letter-spacing: -0.022em;
+      line-height: 1.18;
+      margin-bottom: 18px;
+    }
+    .section-desc {
+      color: var(--text-sub);
+      font-size: 0.97rem;
+      line-height: 1.85;
+      max-width: 580px;
+      margin-bottom: 72px;
+    }
+
+    .hr { height: 1px; background: var(--border); max-width: 1140px; margin: 0 auto; }
+
+    /* ── PAIN ── */
+    .pain-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+    }
+    .pain-card {
+      border: 1px solid var(--border);
+      border-radius: 3px;
+      padding: 36px 28px;
+      background: var(--card);
+      transition: border-color 0.35s, transform 0.35s;
+      cursor: default;
+    }
+    .pain-card:hover {
+      border-color: rgba(201,168,76,0.28);
+      transform: translateY(-6px);
+    }
+    .pain-num {
+      font-family: 'Inter', sans-serif;
+      font-size: 3.2rem;
+      font-weight: 900;
+      line-height: 1;
+      margin-bottom: 20px;
+      background: linear-gradient(130deg, var(--gold) 0%, rgba(201,168,76,0.25) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .pain-card h3 {
+      font-size: 0.95rem;
+      font-weight: 700;
+      margin-bottom: 12px;
+      line-height: 1.5;
+    }
+    .pain-card p {
+      font-size: 0.83rem;
+      color: var(--text-sub);
+      line-height: 1.85;
+    }
+
+    /* ── PLANS ── */
+    .plans-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 28px;
+    }
+    .plan-card {
+      border: 1px solid var(--border);
+      border-radius: 3px;
+      padding: 52px 44px;
+      background: var(--card);
+      position: relative;
+      transition: transform 0.35s, border-color 0.35s;
+    }
+    .plan-card:hover { transform: translateY(-6px); }
+    .plan-card.featured {
+      border-color: rgba(201,168,76,0.5);
+      background: linear-gradient(160deg, rgba(201,168,76,0.06) 0%, rgba(201,168,76,0.02) 100%);
+    }
+    .plan-badge {
+      position: absolute;
+      top: -14px; left: 44px;
+      background: linear-gradient(130deg, var(--gold), var(--gold-light));
+      color: #0a0800;
+      font-family: 'Inter', sans-serif;
+      font-size: 0.62rem;
+      font-weight: 800;
+      letter-spacing: 0.14em;
+      padding: 5px 18px;
+      border-radius: 2px;
+    }
+    .plan-label {
+      font-family: 'Inter', sans-serif;
+      font-size: 0.7rem;
+      font-weight: 600;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 14px;
+    }
+    .plan-price {
+      font-family: 'Inter', sans-serif;
+      font-size: 3rem;
+      font-weight: 900;
+      line-height: 1;
+      letter-spacing: -0.03em;
+      margin-bottom: 8px;
+    }
+    .plan-price-sub {
+      font-size: 0.82rem;
+      color: var(--text-sub);
+      margin-bottom: 32px;
+      padding-bottom: 32px;
+      border-bottom: 1px solid var(--border);
+    }
+    .plan-desc {
+      font-size: 0.85rem;
+      color: var(--text-sub);
+      line-height: 1.85;
+      margin-bottom: 32px;
+    }
+    .feature-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 13px;
+    }
+    .feature-list li {
+      font-size: 0.87rem;
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      line-height: 1.6;
+    }
+    .feature-list li .icon {
+      color: var(--gold);
+      flex-shrink: 0;
+      margin-top: 1px;
+      font-style: normal;
+    }
+    .feature-list li .muted { color: var(--text-sub); }
+
+    /* ── ROADMAP ── */
+    .roadmap-list {
+      position: relative;
+      margin-top: 0;
+    }
+    .roadmap-list::before {
+      content: '';
+      position: absolute;
+      left: 86px;
+      top: 8px; bottom: 8px;
+      width: 1px;
+      background: linear-gradient(to bottom, var(--gold) 0%, rgba(201,168,76,0.1) 100%);
+    }
+    .roadmap-item {
+      display: grid;
+      grid-template-columns: 172px 1fr;
+      gap: 0;
+      margin-bottom: 36px;
+      position: relative;
+    }
+    .roadmap-item:last-child { margin-bottom: 0; }
+
+    .roadmap-left {
+      text-align: right;
+      padding-right: 44px;
+      padding-top: 28px;
+      position: relative;
+    }
+    .roadmap-left::after {
+      content: '';
+      position: absolute;
+      right: -7px; top: 32px;
+      width: 14px; height: 14px;
+      background: var(--gold);
+      border-radius: 50%;
+      box-shadow: 0 0 0 4px rgba(201,168,76,0.15), 0 0 24px rgba(201,168,76,0.5);
+    }
+    .roadmap-month {
+      font-family: 'Inter', sans-serif;
+      font-size: 0.65rem;
+      font-weight: 700;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--gold);
+    }
+    .roadmap-phase {
+      font-size: 0.73rem;
+      color: var(--text-sub);
+      margin-top: 5px;
+    }
+
+    .roadmap-right {
+      border: 1px solid var(--border);
+      border-radius: 3px;
+      padding: 28px 32px;
+      background: var(--card);
+      transition: border-color 0.3s;
+      margin-left: 44px;
+    }
+    .roadmap-right:hover { border-color: rgba(201,168,76,0.2); }
+    .roadmap-right h3 {
+      font-size: 0.98rem;
+      font-weight: 700;
+      margin-bottom: 10px;
+    }
+    .roadmap-right p {
+      font-size: 0.83rem;
+      color: var(--text-sub);
+      line-height: 1.85;
+    }
+
+    /* ── PROFILE ── */
+    .profile-grid {
+      display: grid;
+      grid-template-columns: 300px 1fr;
+      gap: 88px;
+      align-items: start;
+    }
+    .photo-frame {
+      position: relative;
+    }
+    .photo-frame::before {
+      content: '';
+      position: absolute;
+      inset: -1px;
+      background: linear-gradient(145deg, var(--gold), rgba(201,168,76,0.1) 60%, transparent);
+      border-radius: 3px;
+    }
+    .photo-frame::after {
+      content: '';
+      position: absolute;
+      top: 16px; left: 16px;
+      right: -16px; bottom: -16px;
+      border: 1px solid rgba(201,168,76,0.12);
+      border-radius: 3px;
+      z-index: -1;
+    }
+    .profile-img {
+      width: 100%;
+      aspect-ratio: 3/4;
+      object-fit: cover;
+      object-position: top center;
+      display: block;
+      border-radius: 2px;
+      position: relative;
+      z-index: 1;
+      filter: contrast(1.04) brightness(0.94);
+    }
+
+    .profile-name {
+      font-size: 2.2rem;
+      font-weight: 900;
+      letter-spacing: -0.02em;
+      margin-bottom: 8px;
+    }
+    .profile-title {
+      font-family: 'Inter', sans-serif;
+      font-size: 0.72rem;
+      font-weight: 600;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 36px;
+    }
+    .profile-body p {
+      font-size: 0.9rem;
+      color: var(--text-sub);
+      line-height: 1.95;
+      margin-bottom: 16px;
+    }
+    .profile-body p strong { color: var(--text); }
+
+    .stats-row {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+      margin-top: 44px;
+    }
+    .stat {
+      border-left: 2px solid rgba(201,168,76,0.4);
+      padding-left: 18px;
+    }
+    .stat-val {
+      font-family: 'Inter', sans-serif;
+      font-size: 2rem;
+      font-weight: 900;
+      line-height: 1;
+      background: linear-gradient(130deg, var(--gold), var(--gold-light));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 6px;
+    }
+    .stat-lbl {
+      font-size: 0.75rem;
+      color: var(--text-sub);
+      line-height: 1.5;
+    }
+
+    /* ── TERMS ── */
+    .terms-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 20px;
+    }
+    .term-card {
+      display: flex;
+      gap: 20px;
+      padding: 30px;
+      border: 1px solid var(--border);
+      border-radius: 3px;
+      background: var(--card);
+      transition: border-color 0.3s;
+    }
+    .term-card:hover { border-color: rgba(201,168,76,0.2); }
+    .term-icon {
+      font-size: 1.3rem;
+      flex-shrink: 0;
+      margin-top: 1px;
+      line-height: 1;
+    }
+    .term-card h3 {
+      font-size: 0.87rem;
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+    .term-card p {
+      font-size: 0.82rem;
+      color: var(--text-sub);
+      line-height: 1.75;
+    }
+
+    /* ── CTA ── */
+    #cta {
+      position: relative;
+      text-align: center;
+      padding: 160px 48px;
+      overflow: hidden;
+    }
+    #cta::before {
+      content: '';
+      position: absolute;
+      width: 1000px; height: 1000px;
+      background: radial-gradient(circle, rgba(201,168,76,0.05) 0%, transparent 65%);
+      border-radius: 50%;
+      top: 50%; left: 50%;
+      transform: translate(-50%,-50%);
+      pointer-events: none;
+    }
+    #cta::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(201,168,76,0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(201,168,76,0.03) 1px, transparent 1px);
+      background-size: 72px 72px;
+      pointer-events: none;
+    }
+    #cta .cta-inner {
+      position: relative;
+      z-index: 10;
+    }
+    #cta h2 {
+      font-size: clamp(2.2rem, 5vw, 3.8rem);
+      font-weight: 900;
+      letter-spacing: -0.025em;
+      line-height: 1.18;
+      margin-bottom: 24px;
+    }
+    #cta h2 em {
+      font-style: normal;
+      background: linear-gradient(130deg, var(--gold), var(--gold-light));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    #cta p {
+      color: var(--text-sub);
+      font-size: 0.97rem;
+      line-height: 1.9;
+      margin-bottom: 52px;
+    }
+    .btn-cta {
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      background: linear-gradient(135deg, var(--gold), var(--gold-light));
+      color: #0a0800;
+      font-weight: 700;
+      font-size: 0.9rem;
+      letter-spacing: 0.06em;
+      padding: 20px 52px;
+      border-radius: 2px;
+      text-decoration: none;
+      transition: transform 0.25s, box-shadow 0.25s;
+    }
+    .btn-cta:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 20px 64px rgba(201,168,76,0.4);
+    }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 900px) {
+      .hero-inner { grid-template-columns: 1fr; gap: 56px; padding: 100px 28px 60px; }
+      .hero-photo-col { display: flex; justify-content: center; }
+      .hero-photo-border { max-width: 300px; }
+      .pain-grid { grid-template-columns: 1fr; }
+      .plans-grid { grid-template-columns: 1fr; }
+      .profile-grid { grid-template-columns: 1fr; gap: 48px; }
+      .roadmap-item { grid-template-columns: 120px 1fr; }
+      .roadmap-list::before { left: 60px; }
+      .roadmap-left::after { right: -7px; }
+      .terms-grid { grid-template-columns: 1fr; }
+      .stats-row { grid-template-columns: repeat(2, 1fr); }
+      nav { padding: 18px 24px; }
+      .nav-links { display: none; }
+      .section-wrap, .section-wrap-full { padding: 80px 24px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ── NAV ── -->
+<nav id="navbar">
+  <span class="nav-logo">Daishin Sakai</span>
+  <ul class="nav-links">
+    <li><a href="#service">Service</a></li>
+    <li><a href="#roadmap">Roadmap</a></li>
+    <li><a href="#profile">Profile</a></li>
+    <li><a href="#cta">Contact</a></li>
+  </ul>
+</nav>
+
+<!-- ── HERO ── -->
+<section id="hero">
+  <div class="hero-grid-bg"></div>
+  <div class="hero-radial"></div>
+
+  <div class="hero-inner">
+    <div class="hero-text">
+      <span class="hero-eyebrow">AI Personal Training</span>
+      <h1 class="hero-h1">
+        あなたの業務に、<br>AIを<em>実装する</em>。
+      </h1>
+      <p class="hero-sub">
+        研修でも講座でもない。<br>
+        経営者のための完全個別指導で、<br>
+        自社の業務をAIで変える5ヶ月間。
+      </p>
+      <a href="#service" class="btn-primary">サービスを見る →</a>
+    </div>
+    <div class="hero-photo-col">
+      <div class="hero-photo-border">
+        <img src="profile.jpg" alt="栄井大進" class="hero-photo">
+      </div>
+    </div>
+  </div>
+
+  <div class="scroll-indicator">
+    <div class="scroll-line"></div>
+    <span>Scroll</span>
+  </div>
+</section>
+
+<!-- ── PAIN ── -->
+<div class="section-wrap-full">
+  <div class="section-inner">
+    <span class="label reveal">Pain Points</span>
+    <h2 class="section-title reveal">「AIを使いたい」が<br>実務に繋がらない理由</h2>
+    <p class="section-desc reveal">汎用的な研修やYouTubeでは埋まらない、<br>経営者特有の壁がある。</p>
+
+    <div class="pain-grid">
+      <div class="pain-card reveal">
+        <div class="pain-num">01</div>
+        <h3>「何から始めれば」がわからない</h3>
+        <p>ツールは無数にある。しかし自社の業務にどれを、どう使えばいいか整理できないまま時間だけが過ぎる。</p>
+      </div>
+      <div class="pain-card reveal" style="transition-delay:.1s">
+        <div class="pain-num">02</div>
+        <h3>触ってみたが、業務に定着しない</h3>
+        <p>ChatGPTやClaudeを試したことはある。しかし「使える場面」の体系がなく、結局使わなくなった。</p>
+      </div>
+      <div class="pain-card reveal" style="transition-delay:.2s">
+        <div class="pain-num">03</div>
+        <h3>社内に教えられる人間がいない</h3>
+        <p>外注すれば動くものはできる。だが社内に知識が残らず、自分たちで運用・改善できない。</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="hr"></div>
+
+<!-- ── SERVICE ── -->
+<div class="section-wrap" id="service">
+  <span class="label reveal">Service Plans</span>
+  <h2 class="section-title reveal">2つのプラン</h2>
+  <p class="section-desc reveal">まずAI顧問プランで土台を作り、<br>必要に応じてSNS戦略を追加できます。</p>
+
+  <div class="plans-grid">
+    <!-- Plan A -->
+    <div class="plan-card featured reveal">
+      <div class="plan-badge">RECOMMENDED</div>
+      <div class="plan-label">AI顧問プラン</div>
+      <div class="plan-price">¥250,000</div>
+      <div class="plan-price-sub">/ 月（税別）　前月末払い</div>
+      <p class="plan-desc">5ヶ月で「AIを自社に実装できる経営者」になるための、完全オーダーメイド伴走プログラム。</p>
+      <ul class="feature-list">
+        <li><span class="icon">—</span> 週1回セッション（2〜4時間 / オフライン推奨）</li>
+        <li><span class="icon">—</span> LINEでの随時サポート（24時間以内返信・基本は数時間以内）</li>
+        <li><span class="icon">—</span> オーダーメイドカリキュラム設計</li>
+        <li><span class="icon">—</span> 毎週の実践課題 ＋ フィードバック</li>
+        <li><span class="icon">—</span> 最新AI情報の随時共有</li>
+        <li><span class="icon muted">—</span> <span class="muted">最低契約期間：3ヶ月〜</span></li>
+      </ul>
+    </div>
+
+    <!-- Plan B -->
+    <div class="plan-card reveal" style="transition-delay:.1s">
+      <div class="plan-label">AI顧問 ＋ SNSコンサルプラン</div>
+      <div class="plan-price">¥300,000</div>
+      <div class="plan-price-sub">/ 月（税別）　前月末払い</div>
+      <p class="plan-desc">AI活用の土台に加え、SNSを「投稿の場所」から「経営資産」へ変える戦略もセットで学ぶ。</p>
+      <ul class="feature-list">
+        <li><span class="icon">—</span> AI顧問プランの全内容</li>
+        <li><span class="icon">—</span> SNS基礎〜応用教育</li>
+        <li><span class="icon">—</span> アカウントコンセプト設計</li>
+        <li><span class="icon">—</span> コンテンツ企画・投稿設計サポート</li>
+        <li><span class="icon">—</span> 4ヶ月後に「良いコンテンツ」を自分で言語化できる目線を習得</li>
+        <li><span class="icon muted">—</span> <span class="muted">※ 撮影・編集作業は含みません</span></li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<div class="hr"></div>
+
+<!-- ── ROADMAP ── -->
+<div class="section-wrap-full" id="roadmap">
+  <div class="section-inner">
+    <span class="label reveal">5-Month Roadmap</span>
+    <h2 class="section-title reveal">5ヶ月間で、<br>何が変わるか</h2>
+    <p class="section-desc reveal">段階的に「できること」を積み上げ、<br>最終的には自社でAIを設計・展開できる状態を目指します。</p>
+
+    <div class="roadmap-list">
+      <div class="roadmap-item reveal">
+        <div class="roadmap-left">
+          <div class="roadmap-month">Month 1</div>
+          <div class="roadmap-phase">基礎理解</div>
+        </div>
+        <div class="roadmap-right">
+          <h3>AIでできることを体感する</h3>
+          <p>AIの可能性を感覚レベルで理解。ディレクトリ構造の最適化・スライド生成など実務直結の操作を習得。「とりあえず触れる」から「目的を持って使える」へ。</p>
+        </div>
+      </div>
+
+      <div class="roadmap-item reveal" style="transition-delay:.1s">
+        <div class="roadmap-left">
+          <div class="roadmap-month">Month 2</div>
+          <div class="roadmap-phase">外部連携</div>
+        </div>
+        <div class="roadmap-right">
+          <h3>外部サービスと繋ぐ</h3>
+          <p>MCP・API連携を習得。AIが単体のチャットツールではなく、「外のサービスと繋がる自動化の基盤」になる仕組みを理解・実装する。</p>
+        </div>
+      </div>
+
+      <div class="roadmap-item reveal" style="transition-delay:.2s">
+        <div class="roadmap-left">
+          <div class="roadmap-month">Month 3</div>
+          <div class="roadmap-phase">自社連携</div>
+        </div>
+        <div class="roadmap-right">
+          <h3>社内システムと実際に繋ぐ</h3>
+          <p>自社で使用している既存システムをAIと連携。データを自動収集・集計する仕組みを構築し始める。</p>
+        </div>
+      </div>
+
+      <div class="roadmap-item reveal" style="transition-delay:.3s">
+        <div class="roadmap-left">
+          <div class="roadmap-month">Month 4</div>
+          <div class="roadmap-phase">Dashboard</div>
+        </div>
+        <div class="roadmap-right">
+          <h3>全社数値をリアルタイムで見える化</h3>
+          <p>全社の売上・人件費・各事業数値を毎日自動集計するダッシュボードを完成。社内共有できるレベルまで仕上げ、経営判断をデータドリブンに変える。</p>
+        </div>
+      </div>
+
+      <div class="roadmap-item reveal" style="transition-delay:.4s">
+        <div class="roadmap-left">
+          <div class="roadmap-month">Month 5</div>
+          <div class="roadmap-phase">自立・展開</div>
+        </div>
+        <div class="roadmap-right">
+          <h3>AIを「教えられる側」から「設計できる側」へ</h3>
+          <p>AIについて社内・社外に説明・教育できるレベルに到達。新たな自動化の仕組みを自ら設計・構築できる状態へ。徹底サポートします。</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="hr"></div>
+
+<!-- ── PROFILE ── -->
+<div class="section-wrap" id="profile">
+  <span class="label reveal">Profile</span>
+  <h2 class="section-title reveal">なぜ、この人間に<br>頼むのか</h2>
+
+  <div class="profile-grid" style="margin-top:72px">
+    <div class="photo-frame reveal-left">
+      <img src="profile.jpg" alt="栄井大進" class="profile-img">
+    </div>
+
+    <div class="reveal-right">
+      <div class="profile-name">栄井 大進</div>
+      <div class="profile-title">AI Consultant / Entrepreneur</div>
+
+      <div class="profile-body">
+        <p>元プロ格闘家。<strong>知人ゼロの状態でアメリカに渡り、3年で自身のキックボクシングジム「ŌKA Kickboxing Club」を設立。</strong> 2026年には2店舗を追加開業予定。ŌKAブランドとしてサプリメント・プロテイン等の商品展開にも拡大中。</p>
+
+        <p>2025年帰国後、インバウンドビジネスコンサル・SNSコンサル・<strong>抹茶輸出事業（合同会社BEYOND）を同時立ち上げ。</strong>現在は創業2年で売上10億を達成したAI教育企業にてトップAIコンサルタントとして従事。<strong>数十億規模の経営者3社に直接指導中。</strong></p>
+
+        <p>情報収集は英語を主軸とし、<strong>日本より1年以上先行した最先端AI情報にアクセス。</strong> Claude Codeは起動時間のほぼ全てを費やすほど実践的に習熟し、寝ている間も処理を走らせ続けている。</p>
+
+        <p>SNSは英語圏・日本語圏を合わせて<strong>計7アカウントをゼロから万フォロワーへ育てた実績。</strong></p>
+      </div>
+
+      <div class="stats-row">
+        <div class="stat reveal">
+          <div class="stat-val">3社</div>
+          <div class="stat-lbl">数十億規模経営者へ<br>の直接指導実績</div>
+        </div>
+        <div class="stat reveal" style="transition-delay:.1s">
+          <div class="stat-val">7</div>
+          <div class="stat-lbl">SNSアカウントを<br>ゼロから万フォロワーへ</div>
+        </div>
+        <div class="stat reveal" style="transition-delay:.2s">
+          <div class="stat-val">3年</div>
+          <div class="stat-lbl">米国でゼロから<br>ジム設立・経営</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="hr"></div>
+
+<!-- ── TERMS ── -->
+<div class="section-wrap-full" id="terms">
+  <div class="section-inner">
+    <span class="label reveal">Terms</span>
+    <h2 class="section-title reveal">サービス条件</h2>
+
+    <div class="terms-grid" style="margin-top:64px">
+      <div class="term-card reveal">
+        <div class="term-icon">📅</div>
+        <div>
+          <h3>最低契約期間・支払い</h3>
+          <p>最低3ヶ月からの契約。月額は前月末までのお支払いとなります。</p>
+        </div>
+      </div>
+      <div class="term-card reveal" style="transition-delay:.1s">
+        <div class="term-icon">📍</div>
+        <div>
+          <h3>セッション場所</h3>
+          <p>オフラインを推奨。場所はご要望に合わせて相談します。オンライン対応も可能です。</p>
+        </div>
+      </div>
+      <div class="term-card reveal" style="transition-delay:.15s">
+        <div class="term-icon">💬</div>
+        <div>
+          <h3>LINEサポート</h3>
+          <p>件数・時間帯の制限なし。24時間以内に必ず返信、基本は数時間以内に対応します。</p>
+        </div>
+      </div>
+      <div class="term-card reveal" style="transition-delay:.2s">
+        <div class="term-icon">🎯</div>
+        <div>
+          <h3>セッション・課題</h3>
+          <p>週1回 2〜4時間のセッション。毎週の課題はレベルに合わせて設計。具体的な手順を説明した上で翌週までに進めてもらいます。</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ── CTA ── -->
+<section id="cta">
+  <div class="cta-inner">
+    <h2 class="reveal">始めるなら、<br><em>今が最速です。</em></h2>
+    <p class="reveal">
+      まず無料ヒアリングから。<br>
+      現状の業務とゴールを共有いただき、最適なカリキュラムを一緒に設計します。
+    </p>
+    <a href="https://lin.ee/YOUR_LINE_ID" class="btn-cta reveal">LINEで相談する →</a>
+  </div>
+</section>
+
+<script>
+  // Scroll reveal
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.classList.add('visible');
+        io.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.12 });
+
+  document.querySelectorAll('.reveal, .reveal-left, .reveal-right').forEach(el => io.observe(el));
+
+  // Sticky nav
+  const nav = document.getElementById('navbar');
+  window.addEventListener('scroll', () => {
+    nav.classList.toggle('scrolled', window.scrollY > 60);
+  }, { passive: true });
+</script>
+
+</body>
+</html>
