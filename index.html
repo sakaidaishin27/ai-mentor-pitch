@@ -991,6 +991,10 @@
 </section>
 
 <script>
+  // ページ最上部から開始
+  if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
+  window.scrollTo(0, 0);
+
   // Scroll reveal
   const io = new IntersectionObserver((entries) => {
     entries.forEach(e => {
