@@ -3,6 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script>if ('scrollRestoration' in history) history.scrollRestoration = 'manual'; window.scrollTo({ top: 0, behavior: 'instant' });</script>
   <title>AIパーソナルトレーニング | 栄井大進</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -991,9 +992,8 @@
 </section>
 
 <script>
-  // ページ最上部から開始
-  if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
-  window.scrollTo(0, 0);
+  // ページ最上部から開始（instant指定でアニメーションなし）
+  window.scrollTo({ top: 0, behavior: 'instant' });
 
   // Scroll reveal
   const io = new IntersectionObserver((entries) => {
